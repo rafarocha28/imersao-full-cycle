@@ -24,7 +24,7 @@ func (r *AccountRepository) Save(account *domain.Account) error {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(account.ID, account.Name, account.Email, account.Balance,
+	_, err = stmt.Exec(account.ID, account.Name, account.Email, account.APIKey, account.Balance,
 		account.CreatedAt, account.UpdatedAt)
 
 	if err != nil {
@@ -34,36 +34,30 @@ func (r *AccountRepository) Save(account *domain.Account) error {
 }
 
 func (r *AccountRepository) FindByAPIKey(apiKey string) (*domain.Account, error) {
-	var account domain.Account
-	var createdAt, updatedAt time.Time
-
-	err := r.db.QueryRow(`
-	SELECT id, name, email, api_key, balance, created_at, updated_at 
-	FROM accounts 
-	WHERE api_key = $1`, apiKey).Scan(&account.ID, &account.Name, &account.Email, &account.APIKey, &account.Balance, &createdAt, &updatedAt)
-
-	if err == sql.ErrNoRows {
-		return nil, domain.ErrAccountNotFound
-	}
-
-	if err != nil {
-		return nil, err
-	}
-
-	account.CreatedAt = createdAt
-	account.UpdatedAt = updatedAt
-
-	return &account, nil
+	return r.findBy("api_key", apiKey)
 }
 
 func (r *AccountRepository) FindByID(id string) (*domain.Account, error) {
+	return r.findBy("id", id)
+}
+
+func (r *AccountRepository) findBy(field string, value string) (*domain.Account, error) {
 	var account domain.Account
 	var createdAt, updatedAt time.Time
 
-	err := r.db.QueryRow(`
+	query := `
 	SELECT id, name, email, api_key, balance, created_at, updated_at 
 	FROM accounts 
-	WHERE id = $1`, id).Scan(&account.ID, &account.Name, &account.Email, &account.APIKey, &account.Balance, &createdAt, &updatedAt)
+	WHERE ` + field + ` = $1`
+
+	err := r.db.QueryRow(query, value).Scan(
+		&account.ID,
+		&account.Name,
+		&account.Email,
+		&account.APIKey,
+		&account.Balance,
+		&createdAt,
+		&updatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, domain.ErrAccountNotFound

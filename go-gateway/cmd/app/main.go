@@ -10,6 +10,7 @@ import (
 	"github.com/devfullcycle/imersao22/go-gateway/internal/service"
 	"github.com/devfullcycle/imersao22/go-gateway/internal/web/server"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 func getEnv(key, defaultValue string) string {
@@ -37,7 +38,7 @@ func main() {
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
-		log.Fatal("Error opening database connection")
+		log.Fatal("Error opening database connection:", err)
 	}
 	defer db.Close()
 
