@@ -7,4 +7,6 @@ var (
 	ErrDuplicateAPIKey    = errors.New("duplicate api key")
 	ErrInvoiceNotFound    = errors.New("invoice not found")
 	ErrUnauthorizedAccess = errors.New("unauthorized access")
+	ErrInvalidAmount      = errors.New("invalid amount")
+	ErrInvalidStatus      = errors.New("invalid status")
 )
