@@ -69,4 +69,4 @@ Content-Type: application/json
 
 ### Teste com API Key inválida (deve retornar erro)
 GET {{baseUrl}}/invoices
-X-API-Key: invalid-api-key-123
+X-API-Key: {{invalidApiKey}}
