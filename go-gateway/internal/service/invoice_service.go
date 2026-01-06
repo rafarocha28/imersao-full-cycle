@@ -44,7 +44,7 @@ func (s *InvoiceService) Create(input *dto.CreateInvoiceInput) (*dto.InvoiceOutp
 	}
 
 	fromInvoice := dto.FromInvoice(invoice)
-	return fromInvoice, nil
+	return &fromInvoice, nil
 }
 
 func (s *InvoiceService) GetById(id, apiKey string) (*dto.InvoiceOutput, error) {
@@ -63,7 +63,7 @@ func (s *InvoiceService) GetById(id, apiKey string) (*dto.InvoiceOutput, error) 
 	}
 
 	fromInvoice := dto.FromInvoice(invoice)
-	return fromInvoice, nil
+	return &fromInvoice, nil
 }
 
 func (s *InvoiceService) ListByAccount(accountId string) ([]*dto.InvoiceOutput, error) {
@@ -74,7 +74,8 @@ func (s *InvoiceService) ListByAccount(accountId string) ([]*dto.InvoiceOutput, 
 
 	output := make([]*dto.InvoiceOutput, len(invoices))
 	for i, invoice := range invoices {
-		output[i] = dto.FromInvoice(invoice)
+		fromInvoice := dto.FromInvoice(invoice)
+		output[i] = &fromInvoice
 	}
 	return output, nil
 }

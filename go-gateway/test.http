@@ -15,3 +15,58 @@ Content-Type: application/json
 ### Obter dados da conta
 GET {{baseUrl}}/accounts
 X-API-Key: {{apiKey}}
+
+### Criar uma nova invoice
+# @name createInvoice
+POST {{baseUrl}}/invoices
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+    "amount": 150.50,
+    "description": "Pagamento de serviços de consultoria",
+    "payment_type": "credit_card",
+    "card_number": "4111111111111111",
+    "cvv": "123",
+    "card_holder_name": "John Doe"
+}
+
+### Criar invoice com valor alto (será rejeitada automaticamente)
+POST {{baseUrl}}/invoices
+Content-Type: application/json
+X-API-Key: {{apiKey}}
+
+{
+    "amount": 15000.00,
+    "description": "Pagamento de alto valor - teste rejeição",
+    "payment_type": "credit_card",
+    "card_number": "4111111111111111",
+    "cvv": "456",
+    "card_holder_name": "John Doe"
+}
+
+### Obter invoice por ID
+# Substitua {invoice_id} pelo ID retornado na criação da invoice
+GET {{baseUrl}}/invoices/{invoice_id}
+X-API-Key: {{apiKey}}
+
+### Listar todas as invoices da conta
+GET {{baseUrl}}/invoices
+X-API-Key: {{apiKey}}
+
+### Teste sem API Key (deve retornar 401)
+POST {{baseUrl}}/invoices
+Content-Type: application/json
+
+{
+    "amount": 100.00,
+    "description": "Teste sem API Key",
+    "payment_type": "credit_card",
+    "card_number": "4111111111111111",
+    "cvv": "123",
+    "card_holder_name": "Test User"
+}
+
+### Teste com API Key inválida (deve retornar erro)
+GET {{baseUrl}}/invoices
+X-API-Key: invalid-api-key-123
